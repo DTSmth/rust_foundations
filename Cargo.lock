@@ -3,6 +3,17 @@
 version = 4
 
 [[package]]
+name = "authentication"
+version = "0.1.0"
+
+[[package]]
+name = "login"
+version = "0.1.0"
+dependencies = [
+ "authentication",
+]
+
+[[package]]
 name = "rust_foundations"
 version = "0.1.0"
 
