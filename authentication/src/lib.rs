@@ -44,6 +44,10 @@ impl User {
     }
 }
 
+fn get_admin_users() {
+    let users = get_users().iter().filter(|u | u.role == LoginRole::Admin).collect::<Vec<&User>>();
+}
+
 pub fn get_users() -> Vec<User> {
     vec![
         User::new("admin", "password", LoginRole::Admin),
