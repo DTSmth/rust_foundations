@@ -11,8 +11,8 @@ fn main() {
         match login(&username, &password) {
             Some(LoginAction::Granted(role)) => {
                 match role {
-                    LoginRole::Admin => {println!("Admin login")}
-                    LoginRole::User => {println!("User login")}
+                    authentication::LoginRole::Admin => {println!("Admin login")}
+                    authentication::LoginRole::User => {println!("User login")}
                 }
                 break;
             }
