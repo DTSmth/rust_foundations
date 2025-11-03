@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 
 [workspace]
-members = ["authentication", "login",
+members = ["authentication", "login", "login_manager",
     "variables",
 ]
 
