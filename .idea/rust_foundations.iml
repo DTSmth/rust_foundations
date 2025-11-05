@@ -12,6 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/thread_builder/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/footgun/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/scoped_threads/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mutexes/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
