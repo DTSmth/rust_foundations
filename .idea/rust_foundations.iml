@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/divide_work/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/hello/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/thread_builder/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/scoped_threads/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
