@@ -17,6 +17,7 @@
       <sourceFolder url="file://$MODULE_DIR$/deadlocks/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dashing/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/parking/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/channels1/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
