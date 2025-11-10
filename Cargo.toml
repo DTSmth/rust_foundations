@@ -7,7 +7,7 @@ edition = "2024"
 
 [workspace]
 members = ["authentication", "channels1", "dashing", "deadlocks", "divide_work", "footgun", "hello", "login", "login_manager", "mutexes", "parking", "rwlocks", "scoped_threads", "thread_builder",
-    "variables",
+    "variables", "workers",
 ]
 
 
