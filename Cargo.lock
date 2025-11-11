@@ -364,6 +364,9 @@ dependencies = [
 [[package]]
 name = "rust_foundations"
 version = "0.1.0"
+dependencies = [
+ "once_cell",
+]
 
 [[package]]
 name = "rwlocks"
@@ -595,3 +598,10 @@ checksum = "d6bbff5f0aada427a1e5a6da5f1f98158182f26556f345ac9e04d36d0ebed650"
 [[package]]
 name = "workers"
 version = "0.1.0"
+
+[[package]]
+name = "workers2"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+]

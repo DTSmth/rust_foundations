@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+once_cell = "1.21.3"
 
 [workspace]
 members = ["authentication", "channels1", "dashing", "deadlocks", "divide_work", "footgun", "hello", "login", "login_manager", "mutexes", "parking", "rwlocks", "scoped_threads", "thread_builder",
-    "variables", "workers",
+    "variables", "workers", "workers2",
 ]
 
 
