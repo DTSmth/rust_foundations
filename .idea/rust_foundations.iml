@@ -20,6 +20,7 @@
       <sourceFolder url="file://$MODULE_DIR$/channels1/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/workers/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/workers2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/affinity/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
