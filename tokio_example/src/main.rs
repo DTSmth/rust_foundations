@@ -1,27 +1,35 @@
-use tokio::runtime;
+use tokio::*;
 
-async fn hello() {
+async fn hello() -> u32 {
     println!("Hello, tokio!");
+    3
 }
 
-// fn main() {
-//     // let rt = runtime::Builder::new_current_thread()
-//     //     .enable_all()
-//     //     .build()
-//     //     .unwrap();
-//     //
-//     // rt.block_on(hello());
-//
-//     let rt = runtime::Builder::new_multi_thread()
-//         .enable_all()
-//         .worker_threads(4)
-//         .build()
-//         .unwrap();
-//
-//     rt.block_on(hello());
-// }
+async fn hello2() -> u32 {
+    println!("hello world2");
+    4
+}
+
+async fn ticker() {
+    for i in 0 .. 10 {
+        println!("tick {}", i);
+        tokio::task::yield_now().await;
+    }
+}
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
+    // hello().await;
+
+    // let result = tokio::join!(hello2(), hello());
+    // println!("result: {:?}", result);
+    // let (one, two) = result;
+    tokio::spawn(ticker());
     hello().await;
+
+    let _ = tokio::join!(
+        tokio::spawn(hello()),
+        tokio::spawn(ticker())
+    );
+    println!("done");
 }
