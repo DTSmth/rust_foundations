@@ -7,6 +7,6 @@ edition = "2024"
 once_cell = "1.21.3"
 
 [workspace]
-members = ["affinity", "authentication", "blocking", "channels1", "dashing", "deadlocks", "divide_work", "footgun", "hello", "hello_async", "login", "login_manager", "mutexes", "parking", "rayon_iters", "rayon_scopes", "rwlocks", "scoped_threads", "thread_builder", "thread_priorityy", "tokio_example", "variables", "workers", "workers2"]
+members = ["affinity", "authentication", "blocking", "channels1", "dashing", "deadlocks", "divide_work", "footgun", "hello", "hello_async", "login", "login_manager", "mutexes", "parking", "rayon_iters", "rayon_scopes", "rwlocks", "scoped_threads", "thread_builder", "thread_priorityy", "tokio_example", "tokio_testing", "variables", "workers", "workers2"]
 
 

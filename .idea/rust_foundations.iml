@@ -27,6 +27,7 @@
       <sourceFolder url="file://$MODULE_DIR$/hello_async/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tokio_example/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/blocking/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tokio_testing/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
