@@ -280,6 +280,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "fileio"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "tokio",
+]
+
+[[package]]
 name = "footgun"
 version = "0.1.0"
 
