@@ -30,6 +30,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tokio_testing/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/errors/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/fileio/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/restClient/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
