@@ -1,29 +1,45 @@
-use std::sync::mpsc;
+use std::{time::Duration, sync::mpsc};
 
 enum Command {
-    SayHello,
-    Quit,
+    // SayHello,
+    // Quit,
+    Print(String),
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let (tx, rx) = mpsc::channel::<Command>();
+    let (tx_reply, mut rx_reply) = tokio::sync::mpsc::channel::<String>(10);
+    let handle = tokio::runtime::Handle::current();
 
-    let handle = std::thread::spawn(move || {
-       while let Ok(command) = rx.recv() {
-           match command {
-               Command::SayHello => println!("hello"),
-               Command::Quit => {
-                   println!("quit");
-                   break;
-               }
-           }
+    std::thread::spawn(move || {
+        while let Ok(command) = rx.recv() {
+            match command {
+                Command::Print(s) => {
+                    let tx_reply = tx_reply.clone();
+                    handle.spawn(async move {
+                       tx_reply.send(s).await.unwrap();
+                    });
+                    // println!("{}", s)
+                }
+            }
+        }
+    });
+
+    tokio::spawn(async move {
+       while let Some(reply) = rx_reply.recv().await {
+           println!("Got: {}", reply);
        }
     });
 
-    for _ in 0..10 {
-        tx.send(Command::SayHello).unwrap();
+    let mut counter = 0;
+    loop {
+        tokio::time::sleep(Duration::from_secs(1)).await;
+        tx.send(Command::Print(format!("Hello, world!"))).unwrap();
+        counter += 1;
     }
-    println!("Sending quit");
-    tx.send(Command::Quit).unwrap();
-    handle.join().unwrap();
+
+    let (tx, mut rx) = tokio::sync::broadcast::channel::<String>(10);
+    tx.send("Hello, world!".to_string()).unwrap();
+
 }
