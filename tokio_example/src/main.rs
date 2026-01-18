@@ -1,5 +1,3 @@
-use tokio::*;
-
 async fn hello() -> u32 {
     println!("Hello, tokio!");
     3
