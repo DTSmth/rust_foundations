@@ -7,14 +7,14 @@ struct Message {
     message: String,
 }
 
-async fn update_message(id: i64, message: &str, pool: &sqlx::SqlitePool) -> anyhow::Result<()> {
-    sqlx::query(sql: "UPDATE message SET message = ? WHERE id = ?")
-        .bind(message)
-        .bind(id)
-        .execute(pool)
-        .await?;
-    Ok(())
-}
+// async fn update_message(id: i64, message: &str, pool: &sqlx::SqlitePool) -> anyhow::Result<()> {
+//     sqlx::query(sql: "UPDATE message SET message = ? WHERE id = ?")
+//         .bind(message)
+//         .bind(id)
+//         .execute(pool)
+//         .await?;
+//     Ok(())
+// }
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
