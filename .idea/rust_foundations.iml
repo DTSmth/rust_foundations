@@ -34,6 +34,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tokio_select/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/logtracing/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/db/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/web_services/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
