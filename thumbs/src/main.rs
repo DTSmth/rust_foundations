@@ -1,11 +1,14 @@
 use std::net::SocketAddr;
 use std::path::Path;
 use axum::{Extension, Router};
-use axum::extract::Multipart;
-use axum::response::Html;
+use axum::body::Body;
+use axum::extract::{Multipart, Path as AxumPath};
+use axum::http::{header, HeaderMap};
+use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
 use sqlx::{Row, SqlitePool};
 use tokio::net::TcpListener;
+use tokio_util::io::ReaderStream;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -23,6 +26,7 @@ async fn main() -> anyhow::Result<()> {
     let app = Router::new()
         .route("/", get(index_page))
         .route("/upload", post(uploader))
+        .route("/image/{id}", get(get_image))
         .layer(Extension(pool));
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
@@ -51,12 +55,35 @@ async fn index_page() -> Html<String> {
 }
 
 async fn insert_image_into_database(pool: &SqlitePool, tags: &str) -> anyhow::Result<i64> {
-    let row = sqlx::query("INSERT INTO images (tags) VALUES(? RETURNING id)")
+    // 1. Just do the insert without RETURNING
+    let result = sqlx::query("INSERT INTO images (tags) VALUES(?)")
         .bind(tags)
-        .fetch_one(pool)
+        .execute(pool) // Use .execute() instead of .fetch_one()
         .await?;
 
-    Ok(row.get(0))
+    // 2. Get the last inserted ID from the result
+    Ok(result.last_insert_rowid())
+}
+
+async fn save_image(id: i64, bytes: &[u8]) -> anyhow::Result<()> {
+    // Check that the images folder exists and is a directory
+    // If it doesn't, create it.
+    let base_path = Path::new("images");
+    if !base_path.exists() || !base_path.is_dir() {
+        tokio::fs::create_dir_all(base_path).await?;
+    }
+
+    // Use "join" to create a path to the image file. Join is platform aware,
+    // it will handle the differences between Windows and Linux.
+    let image_path = base_path.join(format!("{id}.jpg"));
+    if image_path.exists() {
+        // The file exists. That shouldn't happen.
+        anyhow::bail!("File already exists");
+    }
+
+    // Write the image to the file
+    tokio::fs::write(image_path, bytes).await?;
+    Ok(())
 }
 
 
@@ -80,9 +107,33 @@ async fn uploader(
 
     if let (Some(tags), Some(image)) = (tags, image) { // Destructuring both Options at on
         let new_image_id = insert_image_into_database(&pool, &tags).await.unwrap();
+        save_image(new_image_id, &image).await.unwrap();
     } else {
         panic!("Missing field");
     }
 
     "Ok".to_string()
+}
+
+async fn get_image(AxumPath(id): AxumPath<i64>) -> impl IntoResponse {
+    let filename = format!("images/{id}.jpg");
+    let attachment = format!("filename={filename}");
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        header::CONTENT_TYPE,
+        header::HeaderValue::from_static("image/jpeg"),
+    );
+    headers.insert(
+        header::CONTENT_DISPOSITION,
+        header::HeaderValue::from_str(&attachment).unwrap()
+    );
+    let file = tokio::fs::File::open(&filename).await.unwrap();
+    let stream = ReaderStream::new(file);
+    let body = Body::from_stream(stream);
+
+    axum::response::Response::builder()
+        .header(header::CONTENT_TYPE, header::HeaderValue::from_static("image/jpeg"))
+        .header(header::CONTENT_DISPOSITION, header::HeaderValue::from_str(&attachment).unwrap())
+        .body(body)
+        .unwrap()
 }
