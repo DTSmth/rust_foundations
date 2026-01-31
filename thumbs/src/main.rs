@@ -1,8 +1,9 @@
 use std::net::SocketAddr;
 use std::path::Path;
 use axum::{Extension, Router};
+use axum::extract::Multipart;
 use axum::response::Html;
-use axum::routing::get;
+use axum::routing::{get, post};
 use sqlx::{Row, SqlitePool};
 use tokio::net::TcpListener;
 
@@ -21,6 +22,7 @@ async fn main() -> anyhow::Result<()> {
     // Build Axum with an "extension" to hold the database connection pool
     let app = Router::new()
         .route("/", get(index_page))
+        .route("/upload", post(uploader))
         .layer(Extension(pool));
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
@@ -46,4 +48,14 @@ async fn index_page() -> Html<String> {
     let path = Path::new("src/index.html");
     let content = tokio::fs::read_to_string(path).await.unwrap();
     Html(content)
+}
+
+async fn uploader(mut multipart: Multipart) -> String {
+    while let Some(field) = multipart.next_field().await.unwrap() {
+        let name = field.name().unwrap().to_string();
+        let data = field.bytes().await.unwrap();
+
+        println!("{name} is {} bytes", data.len());
+    }
+    "Ok".to_string()
 }
