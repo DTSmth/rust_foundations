@@ -50,12 +50,39 @@ async fn index_page() -> Html<String> {
     Html(content)
 }
 
-async fn uploader(mut multipart: Multipart) -> String {
+async fn insert_image_into_database(pool: &SqlitePool, tags: &str) -> anyhow::Result<i64> {
+    let row = sqlx::query("INSERT INTO images (tags) VALUES(? RETURNING id)")
+        .bind(tags)
+        .fetch_one(pool)
+        .await?;
+
+    Ok(row.get(0))
+}
+
+
+
+async fn uploader(
+    Extension(pool): Extension<sqlx::SqlitePool>,
+    mut multipart: Multipart
+) -> String {
+    let mut tags = None; // "None" means "no tags yet"
+    let mut image = None;
     while let Some(field) = multipart.next_field().await.unwrap() {
         let name = field.name().unwrap().to_string();
         let data = field.bytes().await.unwrap();
 
-        println!("{name} is {} bytes", data.len());
+        match name.as_str() {
+            "tags" => tags = Some(String::from_utf8(data.to_vec()).unwrap()), // Using Some means we can check we received it
+            "image" => image = Some(data.to_vec()),
+            _ => panic!("Unknown field: {name}"),
+        }
     }
+
+    if let (Some(tags), Some(image)) = (tags, image) { // Destructuring both Options at on
+        let new_image_id = insert_image_into_database(&pool, &tags).await.unwrap();
+    } else {
+        panic!("Missing field");
+    }
+
     "Ok".to_string()
 }
