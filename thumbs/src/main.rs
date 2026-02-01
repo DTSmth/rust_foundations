@@ -1,13 +1,14 @@
 use std::net::SocketAddr;
 use std::path::Path;
-use axum::{Extension, Router};
+use axum::{Extension, Json, Router};
 use axum::body::Body;
 use axum::extract::{Multipart, Path as AxumPath};
 use axum::http::{header, HeaderMap};
 use axum::response::{Html, IntoResponse};
 use axum::routing::{get, post};
 use futures::TryStreamExt;
-use sqlx::{Pool, Row, Sqlite, SqlitePool};
+use serde::{Deserialize, Serialize};
+use sqlx::{FromRow, Pool, Row, Sqlite, SqlitePool};
 use tokio::net::TcpListener;
 use tokio::task::spawn_blocking;
 use tokio_util::io::ReaderStream;
@@ -32,6 +33,8 @@ async fn main() -> anyhow::Result<()> {
         .route("/", get(index_page))
         .route("/upload", post(uploader))
         .route("/image/{id}", get(get_image))
+        .route("/thumb/{id}", get(get_thumbnail))
+        .route("/images", get(list_images))
         .layer(Extension(pool));
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
@@ -176,3 +179,42 @@ async fn fill_missing_thumbnails(pool: &Pool<Sqlite>) -> anyhow::Result<()> {
 
     Ok(())
 }
+
+#[derive(Deserialize, Serialize, FromRow, Debug)]
+struct ImageRecord {
+    id: i64,
+    tags: String,
+}
+
+async fn list_images(Extension(pool): Extension<sqlx::SqlitePool>) -> Json<Vec<ImageRecord>> {
+    sqlx::query_as::<_, ImageRecord>("SELECT id, tags FROM images ORDER BY id")
+        .fetch_all(&pool)
+        .await
+        .unwrap()
+        .into()
+}
+
+async fn get_thumbnail(AxumPath(id): AxumPath<i64>) -> impl IntoResponse {
+    let filename = format!("images/{id}_thumb.jpg");
+    let attachment = format!("filename={filename}");
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        header::CONTENT_TYPE,
+        header::HeaderValue::from_static("image/jpeg"),
+    );
+    headers.insert(
+        header::CONTENT_DISPOSITION,
+        header::HeaderValue::from_str(&attachment).unwrap()
+    );
+    let file = tokio::fs::File::open(&filename).await.unwrap();
+    let stream = ReaderStream::new(file);
+    let body = Body::from_stream(stream);
+
+    axum::response::Response::builder()
+        .header(header::CONTENT_TYPE, header::HeaderValue::from_static("image/jpeg"))
+        .header(header::CONTENT_DISPOSITION, header::HeaderValue::from_str(&attachment).unwrap())
+        .body(body)
+        .unwrap()
+}
+
+
