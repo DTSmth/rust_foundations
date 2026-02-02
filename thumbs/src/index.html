@@ -6,7 +6,12 @@
 <body>
 <h1>Welcome to the thumbnail server</h1>
 <div id="thumbnails"></div>
-<hr/>
+<hr />
+<form method="post" action="/search">
+    <input type="text" name="tags" value="" placeholder="Tags" /> <br />
+    <input type="submit" value="Search" />
+</form>
+<hr />
 <h2>Add an Image</h2>
 <form method="post" action="/upload" enctype="multipart/form-data">
     <input type="text" name="tags" value="" placeholder="Tags"/> <br/>

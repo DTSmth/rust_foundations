@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 use std::path::Path;
-use axum::{Extension, Json, Router};
+use axum::{Extension, Form, Json, Router};
 use axum::body::Body;
 use axum::extract::{Multipart, Path as AxumPath};
 use axum::http::{header, HeaderMap};
@@ -35,6 +35,7 @@ async fn main() -> anyhow::Result<()> {
         .route("/image/{id}", get(get_image))
         .route("/thumb/{id}", get(get_thumbnail))
         .route("/images", get(list_images))
+        .route("/search", post(search_images))
         .layer(Extension(pool));
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
@@ -99,7 +100,7 @@ async fn save_image(id: i64, bytes: &[u8]) -> anyhow::Result<()> {
 async fn uploader(
     Extension(pool): Extension<sqlx::SqlitePool>,
     mut multipart: Multipart
-) -> String {
+) -> Html<String> {
     let mut tags = None; // "None" means "no tags yet"
     let mut image = None;
     while let Some(field) = multipart.next_field().await.unwrap() {
@@ -123,7 +124,9 @@ async fn uploader(
         panic!("Missing field");
     }
 
-    "Ok".to_string()
+    let path = std::path::Path::new("src/redirect.html");
+    let content = tokio::fs::read_to_string(path).await.unwrap();
+    Html(content)
 }
 
 async fn get_image(AxumPath(id): AxumPath<i64>) -> impl IntoResponse {
@@ -216,5 +219,33 @@ async fn get_thumbnail(AxumPath(id): AxumPath<i64>) -> impl IntoResponse {
         .body(body)
         .unwrap()
 }
+
+#[derive(Deserialize)]
+struct Search {
+    tags: String,
+}
+
+async fn search_images(Extension(pool): Extension<sqlx::SqlitePool>, Form(form): Form<Search>) -> Html<String> {
+    let tag = format!("%{}%", form.tags);
+
+    let rows = sqlx::query_as::<_, ImageRecord>("SELECT id, tags FROM images WHERE tags LIKE ? ORDER BY id")
+        .bind(tag)
+        .fetch_all(&pool)
+        .await
+        .unwrap();
+
+    let mut results = String::new();
+    for row in rows {
+        results.push_str(&format!("<a href=\"/image/{}\"><img src='/thumb/{}' /></a><br />", row.id, row.id));
+    }
+
+    let path = std::path::Path::new("src/search.html");
+    let mut content = tokio::fs::read_to_string(path).await.unwrap();
+    content = content.replace("{results}", &results);
+
+    Html(content)
+}
+
+
 
 
