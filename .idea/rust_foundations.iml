@@ -36,6 +36,7 @@
       <sourceFolder url="file://$MODULE_DIR$/db/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/web_services/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/thumbs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/memory/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
