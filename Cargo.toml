@@ -18,6 +18,6 @@ serde = { version = "1.0.228", features = ["derive"] }
 sqlx = { version = "0.8.6", features = ["runtime-tokio-native-tls", "sqlite"] }
 
 [workspace]
-members = ["affinity", "authentication", "blocking", "channels1", "dashing", "db", "deadlocks", "divide_work", "errors", "fileio", "footgun", "hello", "hello_async", "login", "login_manager", "logtracing", "memory", "mutexes", "parking", "rayon_iters", "rayon_scopes", "restClient", "rwlocks", "scoped_threads", "thread_builder", "thread_priorityy", "thumbs", "tokio_example", "tokio_select", "tokio_testing", "variables", "web_services", "workers", "workers2"]
+members = ["affinity", "authentication", "blocking", "channels1", "dashing", "db", "deadlocks", "divide_work", "dropping", "errors", "fileio", "footgun", "hello", "hello_async", "login", "login_manager", "logtracing", "memory", "mutexes", "parking", "rayon_iters", "rayon_scopes", "restClient", "rwlocks", "scoped_threads", "thread_builder", "thread_priorityy", "thumbs", "tokio_example", "tokio_select", "tokio_testing", "variables", "web_services", "workers", "workers2"]
 
 
