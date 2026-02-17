@@ -39,6 +39,7 @@
       <sourceFolder url="file://$MODULE_DIR$/memory/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dropping/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lifetime/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/traits/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
