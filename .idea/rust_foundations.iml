@@ -42,6 +42,7 @@
       <sourceFolder url="file://$MODULE_DIR$/traits/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/generics/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/iterators/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/shared_data/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
