@@ -21,6 +21,6 @@ sqlx = { version = "0.8.6", features = ["runtime-tokio-native-tls", "sqlite"] }
 sysinfo = { version = "0.38.4", features = ["apple-app-store"] }
 
 [workspace]
-members = ["affinity", "authentication", "blocking", "channels1", "collector", "dashing", "db", "deadlocks", "divide_work", "dropping", "errors", "fileio", "footgun", "generics", "hello", "hello_async", "iterators", "lifetime", "login", "login_manager", "logtracing", "memory", "mutexes", "parking", "rayon_iters", "rayon_scopes", "restClient", "rwlocks", "scoped_threads", "shared_data", "thread_builder", "thread_priorityy", "thumbs", "tokio_example", "tokio_select", "tokio_testing", "traits", "variables", "web_services", "workers", "workers2"]
+members = ["affinity", "authentication", "blocking", "channels1", "collector", "dashing", "db", "deadlocks", "divide_work", "dropping", "errors", "fileio", "footgun", "generics", "hello", "hello_async", "iterators", "lifetime", "login", "login_manager", "logtracing", "memory", "mutexes", "parking", "rayon_iters", "rayon_scopes", "restClient", "rwlocks", "scoped_threads", "server", "shared_data", "thread_builder", "thread_priorityy", "thumbs", "tokio_example", "tokio_select", "tokio_testing", "traits", "variables", "web_services", "workers", "workers2"]
 
 

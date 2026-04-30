@@ -44,6 +44,7 @@
       <sourceFolder url="file://$MODULE_DIR$/iterators/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/shared_data/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/collector/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/server/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
