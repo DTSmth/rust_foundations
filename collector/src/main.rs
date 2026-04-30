@@ -1,7 +1,17 @@
 use std::io::Write;
-use shared_data::{CollectorCommandV1, DATA_COLLECTOR_ADDRESS};
+use shared_data::{encode_v1, CollectorCommandV1, DATA_COLLECTOR_ADDRESS};
 use sysinfo::System;
 use std::{time::Instant, sync::mpsc::Sender};
+use std::collections::VecDeque;
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+pub enum CollectorError {
+    #[error("Unable to connect")]
+    UnableToConnect,
+    #[error("Sending failed")]
+    UnableToSendData,
+}
 
 pub fn collect_data(tx: Sender<CollectorCommandV1>) {
     // Initialize the sysinfo system
@@ -51,11 +61,14 @@ pub fn collect_data(tx: Sender<CollectorCommandV1>) {
     }
 }
 
-pub fn send_command(command: CollectorCommandV1) {
-    let bytes = shared_data::encode_v1(command);
-    println!("Encoded {} bytes", bytes.len());
-    let mut stream = std::net::TcpStream::connect(DATA_COLLECTOR_ADDRESS).unwrap();
-    stream.write_all(&bytes).unwrap();
+pub fn send_command(bytes: &[u8]) -> Result<(), CollectorError> {
+    let mut stream = std::net::TcpStream::connect(DATA_COLLECTOR_ADDRESS)
+        .map_err(|_| CollectorError::UnableToConnect)?;
+    stream
+        .write_all(bytes)
+        .map_err(|_| CollectorError::UnableToSendData)?;
+
+    Ok(())
 }
 
 fn main() {
@@ -66,9 +79,21 @@ fn main() {
         collect_data(tx);
     });
 
+    let mut send_queue = VecDeque::with_capacity(120);
+
     // Listen for commands to send
     while let Ok(command) = rx.recv() {
-        send_command(command);
+        let encode = encode_v1(&command);
+        send_queue.push_back(encode);
+
+        while let Some(command) = send_queue.pop_front() {
+            if send_command(&command).is_err() {
+                println!("Error");
+                send_queue.push_front(command);
+                break;
+            }
+        }
+        // let _ = send_command(command);
     }
 }
 
